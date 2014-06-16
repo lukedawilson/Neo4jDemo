@@ -75,10 +75,10 @@ MATCH e<-[r2:WROTE]-x
 RETURN DISTINCT n.Name AS CoveringArtist, x.Name as Composer
 
 Equivalent SQL:
-SELECT DISTINCT art.Name, art2.NAME
-FROM dbo.Artists art
-JOIN dbo.Covers cov ON art.Id = cov.ArtistId
+SELECT DISTINCT coveringArtist.Name, composer.Name
+FROM dbo.Artists coveringArtist
+JOIN dbo.Covers cov ON coveringArtist.Id = cov.ArtistId
 JOIN dbo.Tracks tr ON cov.TrackId = tr.Id
 JOIN dbo.Compositions com ON tr.Id = com.TrackId
-JOIN dbo.Artists art2 ON com.ArtistId = art2.Id
-WHERE art.Id = 1
+JOIN dbo.Artists composer ON com.ArtistId = composer.Id
+WHERE coveringArtist.Id = 1
