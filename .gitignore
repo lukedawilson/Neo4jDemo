@@ -15,8 +15,8 @@ build/
 [Bb]in/
 [Oo]bj/
 
-# Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
-!packages/*/build/
+# NuGet Packages folder
+packages/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -71,6 +71,7 @@ _TeamCity*
 
 # DotCover is a Code Coverage Tool
 *.dotCover
+*.DotSettings
 
 # NCrunch
 *.ncrunch*
