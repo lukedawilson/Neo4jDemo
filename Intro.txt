@@ -1,0 +1,84 @@
+Download link:
+http://www.neo4j.org/download_thanks?edition=community&release=2.0.3&platform=windows&packaging=exe&architecture=x64
+
+Wiki:
+https://github.com/Readify/Neo4jClient/wiki
+https://github.com/Readify/Neo4jClient/wiki/cypher
+https://github.com/Readify/Neo4jClient/wiki/indexes
+
+Connect to database:
+var client = new GraphClient(new Uri("http://localhost:7474/db/data"));
+client.Connect();
+
+Create index:
+client.CreateIndex("index_name", new IndexConfiguration { Provider = IndexProvider.lucene, Type = IndexType.exact }, IndexFor.Node);
+
+Create and insert node, on the given index:
+var nodeReference = client.Create(new Foo { Bar = "Baz" }, null, new[] { new IndexEntry("index_name") { { "key", "value" } } });
+
+Create relationship between nodes:
+public class MyRelationship :
+   Relationship<MyRelationshipData>, IRelationshipAllowingSourceNode<Foo>, IRelationshipAllowingTargetNode<Bar>
+{
+   private const string TypeKey = "MY_RELATIONSHIP_TYPE";
+
+   public MyRelationship(NodeReference targetNode, MyRelationshipData data)
+      : base(targetNode, data)
+   { }
+
+   public override string RelationshipTypeKey
+   {
+      get { return TypeKey; }
+   }
+}
+
+client.CreateRelationship(sourceRef, new MyRelationship(targetRef));
+
+Query nodes:
+var query = client.Cypher
+                  .Start(new { n = Node.ByIndexLookup("index_name", "key", "value") })
+                  .Match("n-[r:MY_RELATIONSHIP_TYPE]->e")
+                  .Return((n, e, r) => new
+                  {
+                     Subject = n.As<Foo>().WhateverProperty,
+                     Object = e.As<Bar>().WhateverProperty,
+                     Relationship = r.As<MyRelationshipData>().WhateverProperty
+                  });
+
+foreach (var result in query.Results)
+   Console.WriteLine(result);
+   
+START n=node:idx_artists(key = "value")
+MATCH n-[r:MY_RELATIONSHIP_TYPE]->e
+RETURN n.foo AS WhateverProperty, e.bar AS WhateverProperty
+ 
+Delete index:
+client.DeleteIndex("index_name", IndexFor.Node);
+         
+Delete node:
+client.Delete(new NodeReference(id), DeleteMode.NodeAndRelationships);
+
+Delete all nodes and relationships:
+var query = client.Cypher.Match("(n)")
+                  .OptionalMatch("(n)-[r]-()")
+                  .Delete("n, r");
+query.ExecuteWithoutResults();
+
+MATCH (n)
+OPTIONAL MATCH (n)-[r]-()
+DELETE n, r
+
+Something a bit more interesting:
+START n=node:idx_artists(id = "JH")
+MATCH n-[r1:COVERED]->e
+MATCH e<-[r2:WROTE]-x
+RETURN DISTINCT n.Name AS CoveringArtist, x.Name as Composer
+
+Equivalent SQL:
+SELECT DISTINCT art.Name, art2.NAME
+FROM dbo.Artists art
+JOIN dbo.Covers cov ON art.Id = cov.ArtistId
+JOIN dbo.Tracks tr ON cov.TrackId = tr.Id
+JOIN dbo.Compositions com ON tr.Id = com.TrackId
+JOIN dbo.Artists art2 ON com.ArtistId = art2.Id
+WHERE art.Id = 1
