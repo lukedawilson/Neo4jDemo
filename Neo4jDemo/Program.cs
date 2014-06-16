@@ -34,7 +34,7 @@ namespace Neo4jDemo
       private static void QueryEntities(GraphClient client)
       {
          var query = client.Cypher
-                           .Start(new { n = Node.ByIndexLookup("idx_artists", "id", "JH") })
+                           .Start(new { n = Node.ByIndexLookup("idx_artists", "id", 1) })
                            .Match("n-[r1:COVERED]->e")
                            .Match("e<-[r2:WROTE]-x")
                            .ReturnDistinct((n, x) => new
@@ -57,10 +57,10 @@ namespace Neo4jDemo
             IndexFor.Node);
 
          // Create entities
-         var jimiHendrix = client.Create(new Artist { Name = "Jimi Hendrix" }, null, new[] { new IndexEntry("idx_artists") { { "id", "JH" } } });
-         var bobDylan = client.Create(new Artist { Name = "Bob Dylan" }, null, new[] { new IndexEntry("idx_artists") { { "id", "BD" } } });
-         var theBeetles = client.Create(new Artist { Name = "The Beetles" }, null, new[] { new IndexEntry("idx_artists") { { "id", "TB" } } });
-         var chuckBerry = client.Create(new Artist { Name = "Chuck Berry" }, null, new[] { new IndexEntry("idx_artists") { { "id", "CB" } } });
+         var jimiHendrix = client.Create(new Artist { Name = "Jimi Hendrix" }, null, new[] { new IndexEntry("idx_artists") { { "id", 1 } } });
+         var bobDylan = client.Create(new Artist { Name = "Bob Dylan" }, null, new[] { new IndexEntry("idx_artists") { { "id", 2 } } });
+         var theBeetles = client.Create(new Artist { Name = "The Beetles" }, null, new[] { new IndexEntry("idx_artists") { { "id", 3 } } });
+         var chuckBerry = client.Create(new Artist { Name = "Chuck Berry" }, null, new[] { new IndexEntry("idx_artists") { { "id", 4} } });
 
          var voodooChile = client.Create(new Track {Name = "Voodoo Chile"});
          var allAlongTheWatchtower = client.Create(new Track {Name = "All Along the Watchtower"});

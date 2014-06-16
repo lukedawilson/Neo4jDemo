@@ -69,7 +69,7 @@ OPTIONAL MATCH (n)-[r]-()
 DELETE n, r
 
 Something a bit more interesting:
-START n=node:idx_artists(id = "JH")
+START n=node:idx_artists(id = 1)
 MATCH n-[r1:COVERED]->e
 MATCH e<-[r2:WROTE]-x
 RETURN DISTINCT n.Name AS CoveringArtist, x.Name as Composer
