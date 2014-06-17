@@ -6,7 +6,7 @@ using Neo4jDemo.Annotations;
 namespace Neo4jDemo
 {
    [UsedImplicitly]
-   static class Program
+   static class Luke
    {
       static void Main()
       {
@@ -89,7 +89,7 @@ namespace Neo4jDemo
    
    public class Track
    {
-      public string Name { get; set; }
+      public string Name { [UsedImplicitly] get; set; }
    }
 
    public class WroteRelationship :
