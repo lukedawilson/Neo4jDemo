@@ -8,15 +8,15 @@ namespace Neo4jDemo
    [UsedImplicitly]
    static class Luke
    {
-      static void Main()
-      {
-         var client = new GraphClient(new Uri("http://localhost:7474/db/data"));
-         client.Connect();
+      //static void Main()
+      //{
+      //   var client = new GraphClient(new Uri("http://localhost:7474/db/data"));
+      //   client.Connect();
 
-         DeleteEntries(client);
-         CreateEntities(client);
-         QueryEntities(client);
-      }
+      //   DeleteEntries(client);
+      //   CreateEntities(client);
+      //   QueryEntities(client);
+      //}
 
       // ReSharper disable once UnusedMember.Local
       private static void DeleteEntries(GraphClient client)
